@@ -35,7 +35,7 @@
     
 	%>
 	
-	<form action="http://localhost:8080//phonebook3/pbc" method="">	
+	<form action="http://localhost:8080/phonebook3/pbc" method="">	
 		<div>
 		<label>아이디(personId)</label>
 		<input type="number" name="no" value= "<%=id %>" readonly>
@@ -54,6 +54,31 @@
 		<div>
 		<label>회사(company)</label>
 		<input type="text" name="company" value="<%=company %>">
+		</div>
+		
+		 <input type="text" name="action" value="edit">
+		<button type="submit">수정</button>
+	</form> 
+	<br><br>
+	<form action="http://localhost:8080/phonebook3/pbc" method="">	
+		<div>
+		<label>아이디(personId)</label>
+		<input type="number" name="no" value= "${param.no}" readonly>
+		</div>
+		
+		<div>
+		<label>이름(name)</label>
+		<input type="text" name="name" value= "${param.name}" >
+		</div>
+		
+		<div>
+		<label>핸드폰(hp)</label>
+		<input type="text" name="hp" value="${param.hp}">
+		</div>
+		
+		<div>
+		<label>회사(company)</label>
+		<input type="text" name="company" value="${param.company}">
 		</div>
 		
 		 <input type="text" name="action" value="edit">

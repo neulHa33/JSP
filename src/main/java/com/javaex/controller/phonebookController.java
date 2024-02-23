@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.javaex.dao.PhoneDao;
+import com.javaex.util.WebUtil;
 import com.javaex.vo.PersonVo;
 
 @WebServlet("/pbc")
@@ -35,8 +36,17 @@ public class phonebookController extends HttpServlet {
 		if("wform".equals(action)) {
 			System.out.println("wform:등록폼");
 			
+			/*
 			RequestDispatcher rd=request.getRequestDispatcher("/writeform.jsp");
 		    rd.forward(request, response);
+		    */
+			
+		    //WebUtil.forward("/writeform.jsp", request, response);
+		    
+		    //WebUtil util = new WebUtil();
+		    //util.redirect("/phonebook3/pbc?action=list", request, response);
+		    
+		    WebUtil.forward(request, response, "/WEB-INF/writeform.jsp");
 		} else if("insert".equals(action)) {
 			System.out.println("insert:등록");
 			
@@ -81,8 +91,12 @@ public class phonebookController extends HttpServlet {
 			//데이터 담기 포워드
 			request.setAttribute("personList", personList);
 			
+			/*
 			RequestDispatcher rd = request.getRequestDispatcher("/list.jsp");
 			rd.forward(request, response);
+			*/
+			
+			WebUtil.forward(request, response, "/WEB-INF/list.jsp");
 			
 		} else if("delete".equals(action)) {
 			System.out.println("delete:삭제");
@@ -93,19 +107,32 @@ public class phonebookController extends HttpServlet {
 			PhoneDao phoneDao = new PhoneDao();
 			phoneDao.personDelete(no);
 			
+			/*
 			//리다이랙트
 			response.sendRedirect("http://localhost:8080/phonebook3/pbc?action=list");
+			*/
+			WebUtil.forward(request, response, "/phonebook3/pbc?action=list");
 			
 		} else if("eform".equals(action)) {
 			System.out.println("eform:수정폼");
 			int no = Integer.parseInt(request.getParameter("no"));
 			System.out.println(no);
 			
-			RequestDispatcher rd=request.getRequestDispatcher("/editform.jsp");
-		    rd.forward(request, response);
+			//db 사용
+			PhoneDao phoneDao = new PhoneDao();
+			
+			// 리스트 가져오기
+			List<PersonVo> selectOneList = phoneDao.selectOne(no);
+			System.out.println(selectOneList);
+			
+			
+			//리다이랙트
+			WebUtil.forward(request, response, "/WEB-INF/editform.jsp");
+			
+		
 		} else if("edit".equals(action)) {
 			System.out.println("edit:수정");
-			
+		
 			//파라미터 가져와서 출력해보기
 			int no = Integer.parseInt(request.getParameter("no"));
 			System.out.println(no);
@@ -121,10 +148,8 @@ public class phonebookController extends HttpServlet {
 			PhoneDao phoneDao = new PhoneDao();
 			phoneDao.personEdit(no, name, hp, company);
 			
-			
 			//리다이랙트
 			response.sendRedirect("http://localhost:8080/phonebook3/pbc?action=list");
-		    
 		}
 	   }
 

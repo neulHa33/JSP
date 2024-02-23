@@ -157,7 +157,7 @@ public class PhoneDao {
 		// 3. SQL문 준비 / 바인딩 / 실행
 			String query = "";
 			query += " select person_id, ";
-			query += " 		  name, ";
+			query += "        name, ";
 			query += " 		  hp, ";
 			query += " 		  company ";
 			query += " from person ";
@@ -208,6 +208,72 @@ public class PhoneDao {
 		
 		
 
+	}
+	
+	public List<PersonVo> selectOne(int no) {
+		List<PersonVo> selectOneList = new ArrayList<PersonVo>();
+		
+		// 0. import java.sql.*;
+				Connection conn = null;
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				try {
+				// 1. JDBC 드라이버 (Oracle) 로딩
+					Class.forName("com.mysql.cj.jdbc.Driver");
+				// 2. Connection 얻어오기
+					String url = "jdbc:mysql://localhost:3306/phone_db";
+					conn = DriverManager.getConnection(url, "phone", "phone");
+				// 3. SQL문 준비 / 바인딩 / 실행
+					String query = "";
+					query += " select name, ";
+					query += " 		  hp, ";
+					query += " 		  company ";
+					query += " from person ";
+					query += " where person_id=? ";
+					
+					//바인딩
+					pstmt = conn.prepareStatement(query);
+					pstmt.setInt(1, no);
+					
+					//실행
+					rs = pstmt.executeQuery();
+					
+					// 4.결과처리
+					while(rs.next()) {
+						String name = rs.getString("name");
+						String hp = rs.getString("hp");
+						String company = rs.getString("company");
+						
+						// db에서 가져온 데이터 vo로 묶기
+						PersonVo personVo = new PersonVo(no, name, hp, company);
+						
+						//리스트에 주소 추가
+						selectOneList.add(personVo);
+						System.out.println(personVo);
+					}
+					
+				} catch (ClassNotFoundException e) {
+				System.out.println("error: 드라이버 로딩 실패 - " + e);
+				} catch (SQLException e) {
+				System.out.println("error:" + e);
+				} finally {
+				// 5. 자원정리
+				try {
+				if (rs != null) {
+				rs.close();
+				} 
+				if (pstmt != null) {
+				pstmt.close();
+				}
+				if (conn != null) {
+				conn.close();
+				}
+				} catch (SQLException e) {
+				System.out.println("error:" + e);
+				}
+				}
+		
+		return selectOneList;
 	}
 	
 	//등록
